@@ -1,0 +1,31 @@
+# Dependencies
+__pycache__/
+*.pyc
+*.pyo
+.conda/
+env/
+venv/
+
+# Nextflow
+.work/
+.nextflow/
+results/
+*.html
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+.nextflow.log*
+
+# Temporary
+tmp/
+temp/
