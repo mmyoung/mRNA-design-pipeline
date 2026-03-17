@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/lin/.openclaw/workspace/mRNA_design_pipeline/bin/rank_candidates.py", line 172, in <module>
-    main()
-  File "/Users/lin/.openclaw/workspace/mRNA_design_pipeline/bin/rank_candidates.py", line 159, in main
-    ranked = rank_candidates([input_data])
-NameError: name 'input_data' is not defined
