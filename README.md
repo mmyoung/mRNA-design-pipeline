@@ -1,84 +1,132 @@
 # 🧬 mRNA Design Pipeline
 
-A Nextflow-based pipeline for designing and evaluating mRNA vaccine candidates.
+<p align="center">
+  <a href="https://nextflow.io"><img src="https://img.shields.io/badge/Nextflow-25.10+-grey.svg?style=flat&logo=nextflow&logoColor=white"></a>
+  <a href="https://www.python.org"><img src="https://img.shields.io/badge/Python-3.10+-blue.svg"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-green.svg"></a>
+</p>
 
-## Overview
+A Nextflow-based computational pipeline for designing and optimizing mRNA vaccine candidates. The pipeline evaluates multiple metrics that affect mRNA expression efficiency and generates ranked candidates with comprehensive HTML reports.
 
-This pipeline takes an amino acid sequence as input and generates ranked mRNA candidates based on multiple efficiency metrics:
+## 📖 Overview
 
-- **Codon Optimization**: CAI, tAI, ENC, GC content
-- **Secondary Structure**: MFE prediction via RNAfold
-- **Immunogenicity**: CpG frequency, TLR risk assessment
-- **UTR Features**: Kozak sequence, poly(A) signals
+This pipeline takes an **amino acid sequence** as input and generates **ranked mRNA candidates** based on multiple efficiency metrics:
 
-## Installation
+```
+Input (AA sequence) → Reverse Translation → Multi-dimensional Evaluation → Ranked Output
+```
+
+## ✨ Features
+
+### Multi-dimensional Evaluation
+- **Codon Optimization**: CAI, tAI, ENC, Codon Pair Bias
+- **GC Content**: Overall GC%, GC3%
+- **Immunogenicity**: CpG frequency, Uridine content, TLR risk assessment
+- **Structure**: MFE estimation, 5' end structure score
+- **Translation Efficiency**: Composite scoring
+- **Initiation**: Kozak sequence analysis
+
+### Output
+- Interactive HTML report with visualizations
+- Detailed metrics for each candidate
+- Top candidates ranked by composite score
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- [Nextflow](https://www.nextflow.io/) (v21+)
-- Python 3.10+
-- ViennaRNA (for RNAfold)
-- Conda (recommended for dependency management)
+- [Nextflow](https://www.nextflow.io/) v21.0+
+- [Conda](https://docs.conda.io/) (recommended) or Python 3.10+
+- Java 11+
 
-### Setup
-
-```bash
-# Clone or download this pipeline
-cd mRNA_design_pipeline
-
-# Make scripts executable
-chmod +x bin/*.py
-
-# Test with sample data
-echo "MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSH" > test_input.fasta
-```
-
-## Usage
-
-### Basic Usage
+### Installation
 
 ```bash
-nextflow run main.nf --input test_input.fasta
+# Clone the repository
+git clone https://github.com/yourusername/mRNA-design-pipeline.git
+cd mRNA-design-pipeline
+
+# Create conda environment
+conda env create -f environment.yml
+conda activate mrna-pipeline
 ```
 
-### With Custom Parameters
+### Run the Pipeline
 
 ```bash
-nextflow run main.nf \
-  --input test_input.fasta \
-  --sample_seqs 200 \
-  --output_dir results
+# Activate environment
+conda activate mrna-pipeline
+
+# Run with test data
+nextflow run main.nf
+
+# Run with custom input
+nextflow run main.nf --input your_sequence.fasta
+
+# Generate more candidates
+nextflow run main.nf --input your_sequence.fasta --sample_seqs 100
 ```
 
-### Parameters
+## 📋 Input Format
+
+The pipeline accepts FASTA format:
+
+```fasta
+>my_sequence
+MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSH
+```
+
+Or plain amino acid sequence:
+
+```bash
+echo "MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSH" > input.txt
+nextflow run main.nf --input input.txt
+```
+
+## 📊 Output
+
+### Generated Files
+- `results/report.html` - Interactive HTML report
+- `work/` - Intermediate files (Nextflow cache)
+
+### Report Contents
+- Summary statistics
+- Score distribution charts
+- Top candidates table with all metrics
+- Radar chart comparison
+
+## ⚙️ Parameters
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `--input` | Required | Input amino acid sequence (FASTA) |
-| `--output_dir` | results | Output directory |
-| `--sample_seqs` | 100 | Number of candidate sequences to generate |
-| `--weight_cai` | 0.20 | CAI weight in scoring |
-| `--weight_tai` | 0.15 | tAI weight in scoring |
-| `--weight_gc` | 0.15 | GC content weight |
-| `--weight_mfe` | 0.15 | MFE weight |
-| `--weight_cpg` | 0.15 | Immunogenicity weight |
-| `--weight_kozak` | 0.10 | Kozak score weight |
-| `--weight_polyA` | 0.10 | Poly(A) signal weight |
+| `--input` | `test_input.fasta` | Input amino acid sequence (FASTA) |
+| `--sample_seqs` | 50 | Number of candidate sequences to generate |
 
-## Output
+## 📈 Evaluation Metrics
 
-The pipeline generates:
+### Codon Optimization
+| Metric | Description | Target |
+|--------|-------------|--------|
+| CAI | Codon Adaptation Index | > 0.8 |
+| tAI | tRNA Adaptation Index | > 0.7 |
+| ENC | Effective Number of Codons | 20-35 |
 
-- `results/report.html` - Interactive HTML report with visualizations
-- `results/ranked_candidates.json` - All candidates with scores
-- `results/top_candidates.fasta` - Top candidate sequences
+### Immunogenicity (Lower is Better)
+| Metric | Description | Target |
+|--------|-------------|--------|
+| CpG Frequency | CpG dinucleotide % | < 3% |
+| Uridine Content | T content % | 20-30% |
 
-## Pipeline Architecture
+### Structure
+| Metric | Description | Target |
+|--------|-------------|--------|
+| GC Content | Overall GC % | 50-60% |
+| MFE | Minimum Free Energy | -15 ~ -30 |
+| 5' Structure | Initiation region accessibility | High |
+
+## 🏗️ Pipeline Architecture
 
 ```
-Input (AA sequence)
-    │
-    ▼
 ┌─────────────────┐
 │  Parse Input   │  → Validate AA sequence
 └─────────────────┘
@@ -88,67 +136,67 @@ Input (AA sequence)
 │Reverse Translate│  → Generate candidate CDS
 └─────────────────┘
     │
-    ├────────────────┬────────────────┐
-    ▼                ▼                ▼
-┌──────────┐   ┌────────────┐   ┌──────────────┐
-│ Codon   │   │ Structure  │   │Immunogenicity│
-│ Scoring │   │ Prediction │   │  Analysis    │
-└──────────┘   └────────────┘   └──────────────┘
-    │                │                │
-    └────────────────┼────────────────┘
-                     ▼
-            ┌─────────────────┐
-            │  Rank Candidates │  → Composite score
-            └─────────────────┘
-                     │
-                     ▼
-            ┌─────────────────┐
-            │ Generate Report │  → HTML output
-            └─────────────────┘
+    ▼
+┌─────────────────┐
+│  Evaluate All   │  → CAI, tAI, GC%, CpG, etc.
+└─────────────────┘
+    │
+    ▼
+┌─────────────────┐
+│ Rank & Report   │  → Composite score + HTML
+└─────────────────┘
 ```
 
-## Metrics Explained
+## 🔧 Development
 
-### Codon Optimization
-
-- **CAI** (Codon Adaptation Index): 0-1, higher is better
-- **tAI** (tRNA Adaptation Index): 0-1, higher is better
-- **ENC** (Effective Number of Codons): 20-61, lower is better
-- **GC3**: GC content at 3rd codon position
-
-### Structure
-
-- **MFE** (Minimum Free Energy): kcal/mol, more negative = more stable
-
-### Immunogenicity
-
-- **CpG Frequency**: %, lower is better
-- **TLR Risk**: 0-1, lower is better
-- **Immunogenicity Score**: 0-100, lower is better
-
-## Development
+### Project Structure
+```
+mRNA-design-pipeline/
+├── main.nf                 # Nextflow main workflow
+├── nextflow.config         # Configuration
+├── environment.yml        # Conda environment
+├── bin/
+│   ├── parse_input.py         # Input parsing
+│   ├── reverse_translate.py   # Generate candidates
+│   ├── evaluate_all.py        # Calculate all metrics
+│   └── rank_and_report.py     # Generate HTML report
+├── templates/             # HTML templates
+├── data/                  # Reference data (codon tables)
+└── test_input.fasta       # Test data
+```
 
 ### Adding New Metrics
 
-1. Create new evaluation script in `bin/`
-2. Add to `main.nf` workflow
-3. Update scoring weights in `bin/rank_candidates.py`
-4. Update report template
+1. Add metric calculation in `bin/evaluate_all.py`
+2. Update weights in `bin/rank_and_report.py`
+3. Update HTML template for visualization
 
-### Running Tests
+## 📚 References
 
-```bash
-# Test individual modules
-python bin/parse_input.py test_input.fasta
-python bin/evaluate_codon.py < candidates.fasta
-```
+The scoring weights are based on publicly available information from:
 
-## License
+- Moderna Therapeutics mRNA platform publications
+- Nature Biotechnology (2021) - mRNA design optimization
+- Nat Rev Drug Discov (2020) - mRNA vaccine design
 
-MIT License
+## ⚠️ Limitations
 
-## Citation
+- MFE is estimated from GC content (not full RNAfold calculation)
+- Limited to human codon usage currently
+- Weights are based on literature; experimental validation recommended
 
-If you use this pipeline in your research, please cite:
+## 🤝 Contributing
 
-> mRNA Design Pipeline - A computational tool for mRNA vaccine design
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## � License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+## 👤 Author
+
+- Your Name - [your.email@example.com]
+
+---
+
+<p align="center">Built with ❤️ for mRNA vaccine research</p>
