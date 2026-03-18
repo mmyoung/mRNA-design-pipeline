@@ -51,6 +51,8 @@ process PARSE_INPUT {
 }
 
 process REVERSE_TRANSLATE {
+    publishDir "${params.output_dir}", mode: 'copy'
+    
     input:
         path aa_seq
         val num_seqs
@@ -64,6 +66,8 @@ process REVERSE_TRANSLATE {
 }
 
 process EVALUATE_ALL {
+    publishDir "${params.output_dir}", mode: 'copy'
+    
     input:
         path candidates
     
@@ -76,13 +80,17 @@ process EVALUATE_ALL {
 }
 
 process RANK_AND_REPORT {
+    publishDir "${params.output_dir}", mode: 'copy'
+    
     input:
         path scores_file
     
     output:
         path "report.html"
+        path "ranked_sequences.fasta"
     
     """
     python3 ${projectDir}/bin/rank_and_report.py ${scores_file} > report.html
+    python3 ${projectDir}/bin/export_fasta.py ${scores_file} > ranked_sequences.fasta
     """
 }

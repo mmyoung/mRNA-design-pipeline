@@ -14,17 +14,50 @@ from collections import defaultdict
 # Codon Usage Tables
 # =============================================================================
 
-# Human codon usage (relative adaptiveness)
+# Human codon usage (COMPLETE - all 61 codons with relative adaptiveness)
 HUMAN_CODON_USAGE = {
-    'TTT': 0.45, 'TTC': 0.55, 'TTA': 0.07, 'TTG': 0.13, 'TCT': 0.18, 'TCC': 0.22,
-    'TCA': 0.15, 'TCG': 0.06, 'TAT': 0.44, 'TAC': 0.56, 'TAA': 0.30, 'TAG': 0.24,
-    'TGT': 0.45, 'TGC': 0.55, 'TGA': 0.46, 'TGG': 1.00, 'CTT': 0.13, 'CTC': 0.20,
-    'CTA': 0.07, 'CTG': 0.40, 'CCT': 0.28, 'CCC': 0.33, 'CCA': 0.27, 'CCG': 0.11,
-    'CAT': 0.41, 'CAC': 0.59, 'CAA': 0.25, 'CAG': 0.75, 'AAT': 0.46, 'AAC': 0.54,
-    'AAA': 0.42, 'AAG': 0.58, 'AGT': 0.15, 'AGC': 0.24, 'AGA': 0.20, 'AGG': 0.20,
-    'GTT': 0.18, 'GTC': 0.22, 'GTA': 0.11, 'GTG': 0.49, 'GCT': 0.26, 'GCC': 0.40,
-    'GCA': 0.23, 'GCG': 0.11, 'GAT': 0.46, 'GAC': 0.54, 'GAA': 0.42, 'GAG': 0.58,
-    'GGT': 0.16, 'GGC': 0.34, 'GGA': 0.25, 'GGG': 0.25,
+    # Phe
+    'TTT': 0.82, 'TTC': 1.00,
+    # Leu
+    'TTA': 0.18, 'TTG': 0.32, 'CTT': 0.32, 'CTC': 0.50, 'CTA': 0.18, 'CTG': 1.00,
+    # Ile
+    'ATT': 0.75, 'ATC': 1.00, 'ATA': 0.33,
+    # Met (Start)
+    'ATG': 1.00,
+    # Val
+    'GTT': 0.37, 'GTC': 0.45, 'GTA': 0.22, 'GTG': 1.00,
+    # Ser
+    'TCT': 0.75, 'TCC': 0.92, 'TCA': 0.62, 'TCG': 0.25, 'AGT': 0.62, 'AGC': 1.00,
+    # Pro
+    'CCT': 0.85, 'CCC': 1.00, 'CCA': 0.82, 'CCG': 0.33,
+    # Thr
+    'ACT': 0.67, 'ACC': 1.00, 'ACA': 0.78, 'ACG': 0.33,
+    # Ala
+    'GCT': 0.65, 'GCC': 1.00, 'GCA': 0.57, 'GCG': 0.27,
+    # Tyr
+    'TAT': 0.79, 'TAC': 1.00,
+    # Stop
+    'TAA': 0.65, 'TAG': 0.52, 'TGA': 1.00,
+    # His
+    'CAT': 0.69, 'CAC': 1.00,
+    # Gln
+    'CAA': 0.33, 'CAG': 1.00,
+    # Asn
+    'AAT': 0.85, 'AAC': 1.00,
+    # Lys
+    'AAA': 0.72, 'AAG': 1.00,
+    # Asp
+    'GAT': 0.85, 'GAC': 1.00,
+    # Glu
+    'GAA': 0.72, 'GAG': 1.00,
+    # Cys
+    'TGT': 0.82, 'TGC': 1.00,
+    # Trp
+    'TGG': 1.00,
+    # Arg
+    'CGT': 0.38, 'CGC': 0.90, 'CGA': 0.52, 'CGG': 1.00, 'AGA': 1.00, 'AGG': 1.00,
+    # Gly
+    'GGT': 0.47, 'GGC': 1.00, 'GGA': 0.74, 'GGG': 0.74,
 }
 
 # tRNA Adaptation Index weights (approximate)
