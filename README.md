@@ -246,7 +246,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## 👤 Author
 
-- Lin Yang - [younglin113@163.com]
+- Lin Yang - [younglin113@gmail.com]
 
 ---
 
